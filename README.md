@@ -17,6 +17,7 @@ The initial task is a three-way classifier:
 - Reusable label schema in JSON
 - Single-question and batch classification CLI
 - Evaluation CLI for labeled JSON datasets
+- Markdown and CSV report generation for completed evaluations
 - Metrics without heavyweight ML dependencies
 - Conda-first development environment
 - Local-only handling for API keys and experiment outputs
@@ -77,6 +78,20 @@ outputs/jev_failures.jsonl
 outputs/metrics.json
 ```
 
+Generate a readable report after evaluation:
+
+```powershell
+qa-jev-report
+```
+
+The report command writes:
+
+```text
+outputs/report.md
+outputs/misclassified.csv
+outputs/low_confidence.csv
+```
+
 ## Dataset Format
 
 Evaluation data is expected to be a JSON list:
@@ -116,6 +131,7 @@ probabilities, confidence, model name, and usage metadata.
 |       |-- classify.py
 |       |-- evaluate.py
 |       |-- metrics.py
+|       |-- report.py
 |       |-- schema.py
 |       `-- typesafe_client.py
 |-- tests/
@@ -146,11 +162,9 @@ ruff check .
 
 ## Roadmap
 
-- Add retry and rate-limit handling for Jev API calls.
-- Cache predictions to make repeated evaluation cheaper.
 - Compare Jev results against the historical SetFit classifier.
 - Add confidence-threshold analysis.
-- Export confusion matrices and summary tables.
+- Add optional visualization for confidence and class-level errors.
 
 ## References
 

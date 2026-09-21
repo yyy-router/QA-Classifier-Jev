@@ -16,6 +16,7 @@ dependencies = [
 [project.scripts]
 qa-jev-classify = "qa_classifier_jev.classify:main"
 qa-jev-evaluate = "qa_classifier_jev.evaluate:main"
+qa-jev-report = "qa_classifier_jev.report:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
