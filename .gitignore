@@ -6,4 +6,6 @@ __pycache__/
 .ruff_cache/
 *.egg-info/
 outputs/
-data/
+data/*
+!data/eval/
+!data/eval/*.json

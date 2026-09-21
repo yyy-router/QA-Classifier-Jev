@@ -59,16 +59,21 @@ Classify one question:
 qa-jev-classify --question "Why is the sky blue?"
 ```
 
-Evaluate a labeled dataset:
+Evaluate the bundled test split:
 
 ```powershell
-qa-jev-evaluate --dataset history/data/test.json --limit 20
+qa-jev-evaluate --dataset data/eval/test.json --limit 20
 ```
+
+Evaluation is resumable by default. Existing rows in `outputs/jev_predictions.jsonl`
+are reused, and new successful predictions are appended. Transient API failures
+are retried before being written to `outputs/jev_failures.jsonl`.
 
 Full evaluation writes:
 
 ```text
 outputs/jev_predictions.jsonl
+outputs/jev_failures.jsonl
 outputs/metrics.json
 ```
 
@@ -85,8 +90,9 @@ Evaluation data is expected to be a JSON list:
 ]
 ```
 
-The historical classifier data can be placed under `history/`. This directory is
-ignored by Git so the repository can stay small and free of model artifacts.
+The repository includes lightweight evaluation splits under `data/eval/`. Larger
+historical training artifacts can be placed under `history/`, which is ignored by
+Git so the repository can stay small and free of model files.
 
 ## Label Schema
 
