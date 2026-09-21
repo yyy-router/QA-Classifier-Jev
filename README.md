@@ -24,18 +24,23 @@ The initial task is a three-way classifier:
 
 ## Installation
 
-Create the Conda environment:
+Create a project-local Conda environment:
 
-```powershell
-conda env create -f environment.yml
-conda activate qa-classifier-jev
+```bat
+conda env create -f environment.yml --prefix .\.conda
+conda activate .\.conda
 pip install -e .
 ```
 
+The environment is stored inside the repository working tree at `.conda/`, which
+is ignored by Git. On Windows, `cmd` tends to handle path-based Conda activation
+more reliably than PowerShell unless PowerShell has been initialized with
+`conda init powershell`.
+
 Create a local environment file:
 
-```powershell
-Copy-Item .env.example .env
+```bat
+copy .env.example .env
 ```
 
 Set your TypeSafe API key in `.env`:
