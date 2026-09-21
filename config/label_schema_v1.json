@@ -1,0 +1,9 @@
+{
+  "name": "qa_question_type_v1",
+  "instructions": "Classify the input question into exactly one question type for a QA/RAG routing pipeline. Choose the label that best describes what kind of answer process the question needs.",
+  "labels": {
+    "Fact": "The question asks for a concrete fact, entity, date, place, number, attribute, title, person, organization, or other specific answer. It can usually be answered by retrieving factual evidence, even when the question text is long.",
+    "Definition": "The question asks for the meaning, definition, description, identity, or explanation of a term, phrase, name, concept, object, entity, or word.",
+    "Reason": "The question requires reasoning beyond direct fact lookup, such as comparing alternatives, explaining why or how something happens, combining multiple facts, following relations across entities, or deciding based on several pieces of evidence."
+  }
+}

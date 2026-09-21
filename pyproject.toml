@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "qa-classifier-jev"
+version = "0.1.0"
+description = "Question classification experiment using TypeSafe AI Jev."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "requests>=2.31",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+qa-jev-classify = "qa_classifier_jev.classify:main"
+qa-jev-evaluate = "qa_classifier_jev.evaluate:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
