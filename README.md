@@ -1,15 +1,29 @@
 # QA-Classifier-Jev
 
-用 TypeSafe AI 的 Jev/System One API 复现实验一个问题分类器。当前目标是把历史 SetFit 分类器的数据和标签体系保留下来，用 Jev 的 `choice` 问题做三分类对比。
+A lightweight question classification experiment powered by
+[TypeSafe AI Jev](https://typesafe.ai/). The project explores whether Jev's
+System One `choice` decisions can replace or complement a small local question
+classifier for QA/RAG routing.
 
-## Git 工作流
+The initial task is a three-way classifier:
 
-- 主分支只接受 PR 合并。
-- 每个实现点在独立分支开发，例如 `chore/init-project-structure`、`feature/jev-eval`。
-- 不直接 push 代码；push 前先确认。
-- `.env`、API key、历史模型文件、实验输出不进入 Git。
+- `Fact`
+- `Definition`
+- `Reason`
 
-## Conda 环境
+## Features
+
+- Jev HTTP client for `POST /v1/systemone`
+- Reusable label schema in JSON
+- Single-question and batch classification CLI
+- Evaluation CLI for labeled JSON datasets
+- Metrics without heavyweight ML dependencies
+- Conda-first development environment
+- Local-only handling for API keys and experiment outputs
+
+## Installation
+
+Create the Conda environment:
 
 ```powershell
 conda env create -f environment.yml
@@ -17,72 +31,131 @@ conda activate qa-classifier-jev
 pip install -e .
 ```
 
-配置 API key：
+Create a local environment file:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-然后在 `.env` 中填入：
+Set your TypeSafe API key in `.env`:
 
 ```text
 TYPESAFE_API_KEY=your_api_key_here
+TYPESAFE_BASE_URL=https://api.typesafe.ai
+TYPESAFE_DEFAULT_MODEL=jev-latest
 ```
 
-## 数据来源
+## Quick Start
 
-历史分类器和数据暂存在 `history/`，该目录默认被 `.gitignore` 忽略，不会提交到仓库。默认评测集路径：
-
-```text
-history/data/test.json
-```
-
-数据格式：
-
-```json
-[
-  {"text": "What is photosynthesis?", "label": "Definition"}
-]
-```
-
-## 标签体系
-
-标签定义在 `config/label_schema_v1.json`：
-
-- `Fact`
-- `Definition`
-- `Reason`
-
-Jev 调用时会把这些标签作为 `choice.criteria` 传入，返回预测标签、概率分布和置信度。
-
-## 本地检查
-
-无 API key 时可以生成请求 payload：
+Preview the Jev request payload without calling the API:
 
 ```powershell
 qa-jev-classify --question "Why is the sky blue?" --dry-run
 ```
 
-有 API key 后进行单条分类：
+Classify one question:
 
 ```powershell
 qa-jev-classify --question "Why is the sky blue?"
 ```
 
-跑固定测试集：
+Evaluate a labeled dataset:
 
 ```powershell
 qa-jev-evaluate --dataset history/data/test.json --limit 20
 ```
 
-完整评测会写入：
+Full evaluation writes:
 
 ```text
 outputs/jev_predictions.jsonl
 outputs/metrics.json
 ```
 
-## 官方接口参考
+## Dataset Format
 
-- TypeSafe Quick start: https://docs.typesafe.ai/introduction/quickstart
-- HTTP API reference: https://docs.typesafe.ai/api
+Evaluation data is expected to be a JSON list:
+
+```json
+[
+  {
+    "text": "What is photosynthesis?",
+    "label": "Definition"
+  }
+]
+```
+
+The historical classifier data can be placed under `history/`. This directory is
+ignored by Git so the repository can stay small and free of model artifacts.
+
+## Label Schema
+
+The default label schema lives at:
+
+```text
+config/label_schema_v1.json
+```
+
+Jev receives the schema as `choice.criteria`, then returns a predicted label,
+probabilities, confidence, model name, and usage metadata.
+
+## Project Layout
+
+```text
+.
+|-- config/
+|   `-- label_schema_v1.json
+|-- src/
+|   `-- qa_classifier_jev/
+|       |-- classify.py
+|       |-- evaluate.py
+|       |-- metrics.py
+|       |-- schema.py
+|       `-- typesafe_client.py
+|-- tests/
+|-- environment.yml
+|-- pyproject.toml
+`-- README.md
+```
+
+## Development
+
+Run the test suite:
+
+```powershell
+pytest
+```
+
+Compile-check the package:
+
+```powershell
+python -m compileall src tests
+```
+
+Lint with Ruff:
+
+```powershell
+ruff check .
+```
+
+## Git Workflow
+
+This repository uses a branch-and-PR workflow:
+
+- Work on feature branches.
+- Do not push directly to the main branch.
+- Open a pull request for review before merging.
+- Keep `.env`, API keys, model files, and generated outputs out of Git.
+
+## Roadmap
+
+- Add retry and rate-limit handling for Jev API calls.
+- Cache predictions to make repeated evaluation cheaper.
+- Compare Jev results against the historical SetFit classifier.
+- Add confidence-threshold analysis.
+- Export confusion matrices and summary tables.
+
+## References
+
+- TypeSafe quick start: https://docs.typesafe.ai/introduction/quickstart
+- TypeSafe HTTP API reference: https://docs.typesafe.ai/api
