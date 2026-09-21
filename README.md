@@ -138,15 +138,6 @@ Lint with Ruff:
 ruff check .
 ```
 
-## Git Workflow
-
-This repository uses a branch-and-PR workflow:
-
-- Work on feature branches.
-- Do not push directly to the main branch.
-- Open a pull request for review before merging.
-- Keep `.env`, API keys, model files, and generated outputs out of Git.
-
 ## Roadmap
 
 - Add retry and rate-limit handling for Jev API calls.
