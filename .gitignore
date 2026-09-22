@@ -9,3 +9,4 @@ outputs/
 data/*
 !data/eval/
 !data/eval/*.json
+.conda
